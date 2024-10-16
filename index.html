@@ -16,145 +16,171 @@
         <form id="cryptoForm">
             <div class="mb-3">
                 <label for="algorithm" class="form-label">Pilih Algoritma</label>
-                <select id="algorithm" class="form-select" required>
-                    <option value="aes">AES</option>
-                    <option value="des">DES</option>
-                    <option value="rc4">RC4</option>
+                <select id="algorithm" class="form-select" required onchange="showDescription()">
+                    <option value="AES">AES</option>
+                    <option value="DES">DES</option>
+                    <option value="3DES">3DES</option>
+                    <option value="RC4">RC4</option>
                 </select>
             </div>
             <div class="mb-3">
-                <label for="text" class="form-label">Teks</label>
-                <textarea id="text" class="form-control" required></textarea>
+                <label for="inputText" class="form-label">Teks</label>
+                <textarea id="inputText" class="form-control" required></textarea>
             </div>
             <div class="mb-3">
                 <label for="key" class="form-label">Kunci</label>
                 <input type="text" id="key" class="form-control" required>
             </div>
-            <button type="button" class="btn btn-primary" onclick="submitForm('encrypt')">Enkripsi</button>
-            <button type="button" class="btn btn-secondary" onclick="submitForm('decrypt')">Dekripsi</button>
+            <button type="button" class="btn btn-primary" onclick="encrypt()">Enkripsi</button>
+            <button type="button" class="btn btn-secondary" onclick="decrypt()">Dekripsi</button>
         </form>
         <h3 class="mt-4">Hasil</h3>
-        <textarea id="result" class="form-control" readonly></textarea>
-        <h4 class="mt-4">Penjelasan</h4>
-        <div id="explanation"></div>
+        <textarea id="resultText" class="form-control" readonly></textarea>
+        
+
+        <h3>Log Proses:</h3>
+        <textarea id="logText" rows="8" cols="50" readonly class="form-control"></textarea>
     </div>
 
     <script>
-        function submitForm(action) {
-            const text = document.getElementById('text').value;
+        // Fungsi untuk menampilkan deskripsi algoritma
+        function showDescription() {
+            const algorithm = document.getElementById('algorithm').value;
+            const description = document.getElementById('algorithmDescription');
+            switch (algorithm) {
+                case 'AES':
+                    description.innerHTML = "AES (Advanced Encryption Standard): Algoritma enkripsi simetris yang sangat aman dengan ukuran blok 128-bit dan kunci 128, 192, atau 256-bit.";
+                    break;
+                case 'DES':
+                    description.innerHTML = "DES (Data Encryption Standard): Algoritma enkripsi simetris dengan ukuran blok 64-bit dan kunci 56-bit. Kurang aman dibandingkan algoritma modern.";
+                    break;
+                case '3DES':
+                    description.innerHTML = "3DES (Triple DES): Versi yang lebih aman dari DES, menggunakan tiga kali operasi enkripsi. Ukuran blok 64-bit dan kunci efektif 112-bit atau 168-bit.";
+                    break;
+                case 'RC4':
+                    description.innerHTML = "RC4: Algoritma stream cipher yang cepat, tetapi telah ditemukan kelemahan keamanan yang signifikan. Tidak direkomendasikan untuk aplikasi baru.";
+                    break;
+                default:
+                    description.innerHTML = "";
+                    break;
+            }
+        }
+
+        // Fungsi untuk enkripsi
+        function encrypt() {
+            const text = document.getElementById('inputText').value;
             const key = document.getElementById('key').value;
             const algorithm = document.getElementById('algorithm').value;
+            let encrypted = '';
+            let log = '';
 
-            let result;
-            if (action === 'encrypt') {
-                result = encryptData(algorithm, text, key);
-            } else {
-                result = decryptData(algorithm, text, key);
+            if (!text || !key) {
+                alert('Teks dan kata kunci harus diisi!');
+                return;
             }
 
-            document.getElementById('result').value = result;
-            document.getElementById('explanation').innerHTML = getExplanation(algorithm, action);
-        }
-
-        function encryptData(algorithm, text, key) {
-            let keyWords;
             switch (algorithm) {
-                case 'aes':
-                    keyWords = CryptoJS.enc.Utf8.parse(key);
-                    const aesIV = CryptoJS.lib.WordArray.random(128 / 8);
-                    return CryptoJS.AES.encrypt(text, keyWords, { iv: aesIV }).toString();
-                case 'des':
-                    keyWords = CryptoJS.enc.Utf8.parse(key);
-                    const desIV = CryptoJS.lib.WordArray.random(64 / 8);
-                    return CryptoJS.DES.encrypt(text, keyWords, { iv: desIV }).toString();
-                case '3des':
-                    keyWords = CryptoJS.enc.Utf8.parse(key);
-                    const tdesIV = CryptoJS.lib.WordArray.random(64 / 8);
-                    return CryptoJS.TripleDES.encrypt(text, keyWords, { iv: tdesIV }).toString();
-                case 'blowfish':
-                    keyWords = CryptoJS.enc.Utf8.parse(key);
-                    const blowfishIV = CryptoJS.lib.WordArray.random(64 / 8);
-                    return CryptoJS.Blowfish.encrypt(text, keyWords, { iv: blowfishIV }).toString();
-                case 'rc4':
-                    return CryptoJS.RC4.encrypt(text, key).toString();
+                case 'AES':
+                    log += "Tahap 1: Input teks dan key diterima.\n";
+                    log += "Tahap 2: Algoritma AES menggunakan mode CBC (Cipher Block Chaining) untuk enkripsi, dengan ukuran blok 128-bit.\n";
+                    log += "Tahap 3: Teks dipecah menjadi blok-blok 128-bit dan setiap blok dienkripsi menggunakan kunci.\n";
+                    log += "Tahap 4: Setiap blok terenkripsi kemudian digabungkan dengan blok sebelumnya untuk keamanan tambahan.\n";
+                    encrypted = CryptoJS.AES.encrypt(text, key).toString(CryptoJS.format.Base64);
+                    log += "Tahap 5: Teks terenkripsi dengan key " + key.length + "-bit.\n";
+                    break;
+                case 'DES':
+                    log += "Tahap 1: Input teks dan key diterima.\n";
+                    log += "Tahap 2: Algoritma DES menggunakan ukuran blok 64-bit dan kunci 56-bit.\n";
+                    log += "Tahap 3: Teks dipecah menjadi blok-blok 64-bit. Jika teks tidak habis dibagi, padding ditambahkan.\n";
+                    log += "Tahap 4: Setiap blok dienkripsi dengan serangkaian operasi substitusi dan permutasi.\n";
+                    encrypted = CryptoJS.DES.encrypt(text, key).toString(CryptoJS.format.Base64);
+                    log += "Tahap 5: Teks terenkripsi menggunakan kunci DES.\n";
+                    break;
+                case '3DES':
+                    log += "Tahap 1: Input teks dan key diterima.\n";
+                    log += "Tahap 2: Algoritma 3DES melakukan enkripsi menggunakan tiga set kunci (kunci 112-bit atau 168-bit).\n";
+                    log += "Tahap 3: Teks dipecah menjadi blok-blok 64-bit. Padding ditambahkan jika diperlukan.\n";
+                    log += "Tahap 4: Setiap blok dienkripsi tiga kali dengan menggunakan algoritma DES secara berurutan.\n";
+                    encrypted = CryptoJS.TripleDES.encrypt(text, key).toString(CryptoJS.format.Base64);
+                    log += "Tahap 5: Teks terenkripsi dengan kunci 3DES.\n";
+                    break;
+                case 'RC4':
+                    log += "Tahap 1: Input teks dan key diterima.\n";
+                    log += "Tahap 2: Algoritma RC4 menggunakan kunci untuk menghasilkan stream keystream yang panjang.\n";
+                    log += "Tahap 3: Teks dienkripsi dengan meng-XOR (Exclusive OR) setiap byte dari teks dengan byte dari keystream.\n";
+                    encrypted = CryptoJS.RC4.encrypt(text, key).toString(CryptoJS.format.Base64);
+                    log += "Tahap 4: Teks terenkripsi menggunakan kunci RC4.\n";
+                    break;
                 default:
-                    return '';
+                    alert('Algoritma tidak ditemukan!');
+                    return;
             }
+
+            document.getElementById('resultText').value = encrypted;
+            document.getElementById('logText').value = log;
         }
 
-        function decryptData(algorithm, encText, key) {
-            let keyWords;
-            switch (algorithm) {
-                case 'aes':
-                    keyWords = CryptoJS.enc.Utf8.parse(key);
-                    return CryptoJS.AES.decrypt(encText, keyWords).toString(CryptoJS.enc.Utf8);
-                case 'des':
-                    keyWords = CryptoJS.enc.Utf8.parse(key);
-                    return CryptoJS.DES.decrypt(encText, keyWords).toString(CryptoJS.enc.Utf8);
-                case '3des':
-                    keyWords = CryptoJS.enc.Utf8.parse(key);
-                    return CryptoJS.TripleDES.decrypt(encText, keyWords).toString(CryptoJS.enc.Utf8);
-                case 'blowfish':
-                    keyWords = CryptoJS.enc.Utf8.parse(key);
-                    return CryptoJS.Blowfish.decrypt(encText, keyWords).toString(CryptoJS.enc.Utf8);
-                case 'rc4':
-                    return CryptoJS.RC4.decrypt(encText, key).toString(CryptoJS.enc.Utf8);
-                default:
-                    return '';
+        // Fungsi untuk dekripsi
+        function decrypt() {
+            const text = document.getElementById('inputText').value;
+            const key = document.getElementById('key').value;
+            const algorithm = document.getElementById('algorithm').value;
+            let decrypted = '';
+            let log = '';
+
+            if (!text || !key) {
+                alert('Teks dan kata kunci harus diisi!');
+                return;
             }
-        }
 
-        function getExplanation(algorithm, action) {
-            const explanations = {
-                'aes': {
-                    description: "AES adalah algoritma enkripsi simetris yang menggunakan blok data berukuran 128-bit, dengan ukuran kunci yang bervariasi (128, 192, atau 256-bit).",
-                    steps: [
-                        "1. Key Expansion: Kunci awal diubah menjadi beberapa kunci bundar (round keys).",
-                        "2. Initial Round: Blok plaintext digabungkan dengan kunci bundar pertama menggunakan operasi XOR.",
-                        "3. Ronde Utama: Meliputi langkah-langkah SubBytes, ShiftRows, MixColumns, dan AddRoundKey.",
-                        "4. Final Round: Langkah-langkah yang sama, tetapi tanpa MixColumns."
-                    ]
-                },
-                'des': {
-                    description: "DES adalah algoritma enkripsi blok yang menggunakan blok 64-bit dan kunci 56-bit.",
-                    steps: [
-                        "1. Initial Permutation (IP): Blok data diacak menggunakan tabel permutasi awal.",
-                        "2. Expansion: Setiap setengah blok diperluas dari 32-bit menjadi 48-bit.",
-                        "3. Key Mixing: Blok diperluas di-XOR dengan kunci bundar.",
-                        "4. Substitution: Blok hasil di-XOR dimasukkan ke tabel substitusi (S-box).",
-                        "5. Permutation: Blok yang dihasilkan dari S-box dipermutasikan.",
-                        "6. Final Permutation: Hasil akhir diacak kembali."
-                    ]
-                },
-                '3des': {
-                    description: "3DES adalah pengembangan dari DES yang menerapkan algoritma DES tiga kali pada setiap blok data.",
-                    steps: [
-                        "1. Kunci dibagi menjadi tiga kunci DES yang berbeda.",
-                        "2. Enkripsi dengan kunci pertama.",
-                        "3. Dekripsi dengan kunci kedua.",
-                        "4. Enkripsi dengan kunci ketiga."
-                    ]
-                },
-                'blowfish': {
-                    description: "Blowfish adalah algoritma enkripsi simetris dengan ukuran blok 64-bit dan kunci hingga 448-bit.",
-                    steps: [
-                        "1. Kunci diubah menjadi 4168 byte menggunakan tabel substitusi.",
-                        "2. Blok dibagi menjadi dua bagian 32-bit.",
-                        "3. Setiap bagian di-XOR dengan kunci yang relevan dan diproses melalui tabel substitusi."
-                    ]
-                },
-                'rc4': {
-                    description: "RC4 adalah algoritma enkripsi stream yang menggunakan kunci dari 1 hingga 256 byte.",
-                    steps: [
-                        "1. Inisialisasi vektor kunci menggunakan kunci yang diberikan.",
-                        "2. Menghasilkan stream kunci menggunakan vektor kunci.",
-                        "3. Menggunakan stream kunci untuk mengenkripsi atau mendekripsi plaintext."
-                    ]
-                },
-            };
+            try {
+                switch (algorithm) {
+                    case 'AES':
+                        log += "Tahap 1: Input teks terenkripsi dan key diterima.\n";
+                        log += "Tahap 2: Algoritma AES menggunakan mode CBC untuk dekripsi.\n";
+                        log += "Tahap 3: Teks dienkripsi sebelumnya dipecah menjadi blok 128-bit.\n";
+                        log += "Tahap 4: Setiap blok didekripsi menggunakan kunci yang sama dan hasilnya digabungkan.\n";
+                        decrypted = CryptoJS.AES.decrypt(text, key).toString(CryptoJS.enc.Utf8);
+                        log += "Tahap 5: Teks didekripsi dengan key " + key.length + "-bit.\n";
+                        break;
+                    case 'DES':
+                        log += "Tahap 1: Input teks terenkripsi dan key diterima.\n";
+                        log += "Tahap 2: Algoritma DES menggunakan ukuran blok 64-bit untuk dekripsi.\n";
+                        log += "Tahap 3: Teks dienkripsi sebelumnya dipecah menjadi blok 64-bit.\n";
+                        log += "Tahap 4: Setiap blok didekripsi dengan serangkaian operasi invers dari enkripsi.\n";
+                        decrypted = CryptoJS.DES.decrypt(text, key).toString(CryptoJS.enc.Utf8);
+                        log += "Tahap 5: Teks didekripsi dengan kunci DES.\n";
+                        break;
+                    case '3DES':
+                        log += "Tahap 1: Input teks terenkripsi dan key diterima.\n";
+                        log += "Tahap 2: Algoritma 3DES menggunakan tiga set kunci untuk dekripsi.\n";
+                        log += "Tahap 3: Teks dienkripsi sebelumnya dipecah menjadi blok 64-bit.\n";
+                        log += "Tahap 4: Setiap blok didekripsi tiga kali menggunakan algoritma DES secara berurutan.\n";
+                        decrypted = CryptoJS.TripleDES.decrypt(text, key).toString(CryptoJS.enc.Utf8);
+                        log += "Tahap 5: Teks didekripsi dengan kunci 3DES.\n";
+                        break;
+                    case 'RC4':
+                        log += "Tahap 1: Input teks terenkripsi dan key diterima.\n";
+                        log += "Tahap 2: Algoritma RC4 menggunakan kunci untuk menghasilkan stream keystream.\n";
+                        log += "Tahap 3: Teks didekripsi dengan meng-XOR (Exclusive OR) setiap byte dari teks dengan byte dari keystream.\n";
+                        decrypted = CryptoJS.RC4.decrypt(text, key).toString(CryptoJS.enc.Utf8);
+                        log += "Tahap 4: Teks didekripsi dengan kunci RC4.\n";
+                        break;
+                    default:
+                        alert('Algoritma tidak ditemukan!');
+                        return;
+                }
 
-            const explanation = explanations[algorithm];
-            return `<strong>Deskripsi:</strong> ${explanation.description}<br><strong>Langkah-langkah:</strong><br>${explanation.steps.join('<br>')}`;
+                if (!decrypted) {
+                    alert('Dekripsi gagal! Periksa teks dan kata kunci.');
+                } else {
+                    document.getElementById('resultText').value = decrypted;
+                }
+
+                document.getElementById('logText').value += log;
+            } catch (error) {
+                alert('Kesalahan saat mendekripsi. Pastikan input dan kunci benar.');
+            }
         }
     </script>
 </body>
