@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Enkripsi/Dekripsi</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mt-5">Aplikasi Enkripsi/Dekripsi</h1>
+        <form id="cryptoForm">
+            <div class="mb-3">
+                <label for="algorithm" class="form-label">Pilih Algoritma</label>
+                <select id="algorithm" class="form-select" required>
+                    <option value="aes">AES</option>
+                    <option value="des">DES</option>
+                    <option value="rc4">RC4</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="text" class="form-label">Teks</label>
+                <textarea id="text" class="form-control" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="key" class="form-label">Kunci</label>
+                <input type="text" id="key" class="form-control" required>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="submitForm('encrypt')">Enkripsi</button>
+            <button type="button" class="btn btn-secondary" onclick="submitForm('decrypt')">Dekripsi</button>
+        </form>
+        <h3 class="mt-4">Hasil</h3>
+        <textarea id="result" class="form-control" readonly></textarea>
+        <h4 class="mt-4">Penjelasan</h4>
+        <div id="explanation"></div>
+    </div>
+
+    <script>
+        function submitForm(action) {
+            const text = document.getElementById('text').value;
+            const key = document.getElementById('key').value;
+            const algorithm = document.getElementById('algorithm').value;
+
+            let result;
+            if (action === 'encrypt') {
+                result = encryptData(algorithm, text, key);
+            } else {
+                result = decryptData(algorithm, text, key);
+            }
+
+            document.getElementById('result').value = result;
+            document.getElementById('explanation').innerHTML = getExplanation(algorithm, action);
+        }
+
+        function encryptData(algorithm, text, key) {
+            let keyWords;
+            switch (algorithm) {
+                case 'aes':
+                    keyWords = CryptoJS.enc.Utf8.parse(key);
+                    const aesIV = CryptoJS.lib.WordArray.random(128 / 8);
+                    return CryptoJS.AES.encrypt(text, keyWords, { iv: aesIV }).toString();
+                case 'des':
+                    keyWords = CryptoJS.enc.Utf8.parse(key);
+                    const desIV = CryptoJS.lib.WordArray.random(64 / 8);
+                    return CryptoJS.DES.encrypt(text, keyWords, { iv: desIV }).toString();
+                case '3des':
+                    keyWords = CryptoJS.enc.Utf8.parse(key);
+                    const tdesIV = CryptoJS.lib.WordArray.random(64 / 8);
+                    return CryptoJS.TripleDES.encrypt(text, keyWords, { iv: tdesIV }).toString();
+                case 'blowfish':
+                    keyWords = CryptoJS.enc.Utf8.parse(key);
+                    const blowfishIV = CryptoJS.lib.WordArray.random(64 / 8);
+                    return CryptoJS.Blowfish.encrypt(text, keyWords, { iv: blowfishIV }).toString();
+                case 'rc4':
+                    return CryptoJS.RC4.encrypt(text, key).toString();
+                default:
+                    return '';
+            }
+        }
+
+        function decryptData(algorithm, encText, key) {
+            let keyWords;
+            switch (algorithm) {
+                case 'aes':
+                    keyWords = CryptoJS.enc.Utf8.parse(key);
+                    return CryptoJS.AES.decrypt(encText, keyWords).toString(CryptoJS.enc.Utf8);
+                case 'des':
+                    keyWords = CryptoJS.enc.Utf8.parse(key);
+                    return CryptoJS.DES.decrypt(encText, keyWords).toString(CryptoJS.enc.Utf8);
+                case '3des':
+                    keyWords = CryptoJS.enc.Utf8.parse(key);
+                    return CryptoJS.TripleDES.decrypt(encText, keyWords).toString(CryptoJS.enc.Utf8);
+                case 'blowfish':
+                    keyWords = CryptoJS.enc.Utf8.parse(key);
+                    return CryptoJS.Blowfish.decrypt(encText, keyWords).toString(CryptoJS.enc.Utf8);
+                case 'rc4':
+                    return CryptoJS.RC4.decrypt(encText, key).toString(CryptoJS.enc.Utf8);
+                default:
+                    return '';
+            }
+        }
+
+        function getExplanation(algorithm, action) {
+            const explanations = {
+                'aes': {
+                    description: "AES adalah algoritma enkripsi simetris yang menggunakan blok data berukuran 128-bit, dengan ukuran kunci yang bervariasi (128, 192, atau 256-bit).",
+                    steps: [
+                        "1. Key Expansion: Kunci awal diubah menjadi beberapa kunci bundar (round keys).",
+                        "2. Initial Round: Blok plaintext digabungkan dengan kunci bundar pertama menggunakan operasi XOR.",
+                        "3. Ronde Utama: Meliputi langkah-langkah SubBytes, ShiftRows, MixColumns, dan AddRoundKey.",
+                        "4. Final Round: Langkah-langkah yang sama, tetapi tanpa MixColumns."
+                    ]
+                },
+                'des': {
+                    description: "DES adalah algoritma enkripsi blok yang menggunakan blok 64-bit dan kunci 56-bit.",
+                    steps: [
+                        "1. Initial Permutation (IP): Blok data diacak menggunakan tabel permutasi awal.",
+                        "2. Expansion: Setiap setengah blok diperluas dari 32-bit menjadi 48-bit.",
+                        "3. Key Mixing: Blok diperluas di-XOR dengan kunci bundar.",
+                        "4. Substitution: Blok hasil di-XOR dimasukkan ke tabel substitusi (S-box).",
+                        "5. Permutation: Blok yang dihasilkan dari S-box dipermutasikan.",
+                        "6. Final Permutation: Hasil akhir diacak kembali."
+                    ]
+                },
+                '3des': {
+                    description: "3DES adalah pengembangan dari DES yang menerapkan algoritma DES tiga kali pada setiap blok data.",
+                    steps: [
+                        "1. Kunci dibagi menjadi tiga kunci DES yang berbeda.",
+                        "2. Enkripsi dengan kunci pertama.",
+                        "3. Dekripsi dengan kunci kedua.",
+                        "4. Enkripsi dengan kunci ketiga."
+                    ]
+                },
+                'blowfish': {
+                    description: "Blowfish adalah algoritma enkripsi simetris dengan ukuran blok 64-bit dan kunci hingga 448-bit.",
+                    steps: [
+                        "1. Kunci diubah menjadi 4168 byte menggunakan tabel substitusi.",
+                        "2. Blok dibagi menjadi dua bagian 32-bit.",
+                        "3. Setiap bagian di-XOR dengan kunci yang relevan dan diproses melalui tabel substitusi."
+                    ]
+                },
+                'rc4': {
+                    description: "RC4 adalah algoritma enkripsi stream yang menggunakan kunci dari 1 hingga 256 byte.",
+                    steps: [
+                        "1. Inisialisasi vektor kunci menggunakan kunci yang diberikan.",
+                        "2. Menghasilkan stream kunci menggunakan vektor kunci.",
+                        "3. Menggunakan stream kunci untuk mengenkripsi atau mendekripsi plaintext."
+                    ]
+                },
+            };
+
+            const explanation = explanations[algorithm];
+            return `<strong>Deskripsi:</strong> ${explanation.description}<br><strong>Langkah-langkah:</strong><br>${explanation.steps.join('<br>')}`;
+        }
+    </script>
+</body>
+
+</html>
