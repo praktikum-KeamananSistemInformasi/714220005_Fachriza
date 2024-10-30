@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analisis Risiko DREAD</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+  <h2>Analisis Risiko DREAD</h2>
+
+  <div class="form-container">
+    <!-- Dropdown 1: Pilih Aset -->
+    <div class="form-group">
+      <label for="aset">Pilih Aset:</label>
+      <select id="aset">
+        <option value="Server">Server</option>
+        <option value="Database">Database</option>
+        <option value="Data Pengguna">Data Pengguna</option>
+        <option value="API Eksternal">API Eksternal</option>
+      </select>
+    </div>
+
+    <!-- Dropdown 2: Ancaman STRIDE -->
+    <div class="form-group">
+      <label for="ancaman">Ancaman (STRIDE):</label>
+      <select id="ancaman">
+        <!-- Spoofing -->
+        <option value="Spoofing1">Pencurian identitas pengguna untuk akses ilegal ke sistem</option>
+        <option value="Spoofing2">Penggunaan kredensial palsu untuk mengakses data sensitif</option>
+        <option value="Spoofing3">Meniru perangkat atau alamat IP untuk menyamar sebagai pengguna sah</option>
+
+        <!-- Tampering -->
+        <option value="Tampering1">Mengubah konfigurasi server secara tidak sah</option>
+        <option value="Tampering2">Memodifikasi data transaksi di database tanpa izin</option>
+        <option value="Tampering3">Manipulasi data log untuk menyembunyikan aktivitas ilegal</option>
+
+        <!-- Repudiation -->
+        <option value="Repudiation1">Pengguna menyangkal transaksi finansial yang sah</option>
+        <option value="Repudiation2">Pengguna menolak aktivitas login yang dilakukan oleh dirinya sendiri</option>
+        <option value="Repudiation3">Penolakan terhadap pengiriman atau penerimaan data sensitif</option>
+
+        <!-- Information Disclosure -->
+        <option value="InformationDisclosure1">Pengungkapan data pribadi pengguna tanpa izin</option>
+        <option value="InformationDisclosure2">Akses ke file sistem yang mengandung informasi rahasia</option>
+        <option value="InformationDisclosure3">Kebocoran kredensial atau token autentikasi</option>
+
+        <!-- Denial of Service -->
+        <option value="DenialOfService1">Pembanjiran permintaan ke server sehingga layanan terganggu</option>
+        <option value="DenialOfService2">Serangan DDoS yang mencegah akses pengguna sah</option>
+        <option value="DenialOfService3">Mengonsumsi sumber daya sistem hingga sistem tidak dapat berfungsi</option>
+
+        <!-- Elevation of Privilege -->
+        <option value="ElevationOfPrivilege1">Eksploitasi untuk meningkatkan hak akses di sistem</option>
+        <option value="ElevationOfPrivilege2">Mendapatkan akses administratif tanpa izin</option>
+        <option value="ElevationOfPrivilege3">Menggunakan kerentanan untuk akses data dan fitur yang dibatasi</option>
+      </select>
+    </div>
+
+    <!-- Dropdowns untuk Faktor DREAD -->
+    <div class="form-group">
+      <label for="damage">Damage:</label>
+      <select id="damage">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="reproducibility">Reproducibility:</label>
+      <select id="reproducibility">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="exploitability">Exploitability:</label>
+      <select id="exploitability">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="affectedUsers">Affected Users:</label>
+      <select id="affectedUsers">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="discoverability">Discoverability:</label>
+      <select id="discoverability">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+    </div>
+  </div>
+
+  <button onclick="generateData()">Generate</button>
+  <canvas id="dreadChart" width="400" height="200"></canvas>
+
+  <!-- Tabel Mitigasi Risiko -->
+  <table id="riskTable">
+    <thead>
+      <tr>
+        <th>Aset</th>
+        <th>Ancaman</th>
+        <th>Nilai DREAD</th>
+        <th>Mitigasi Risiko</th>
+        <th>Review</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Rows akan ditambahkan secara dinamis -->
+    </tbody>
+  </table>
+
+  <script>
+    function getMitigation(ancaman) {
+      switch (ancaman) {
+        case 'Spoofing1':
+        case 'Spoofing2':
+        case 'Spoofing3':
+          return "Implementasi autentikasi dua faktor dan pemeriksaan identitas secara menyeluruh.";
+        case 'Tampering1':
+        case 'Tampering2':
+        case 'Tampering3':
+          return "Gunakan enkripsi data dan kontrol akses untuk melindungi integritas data.";
+        case 'Repudiation1':
+        case 'Repudiation2':
+        case 'Repudiation3':
+          return "Sediakan log audit yang komprehensif dan tidak dapat diubah.";
+        case 'InformationDisclosure1':
+        case 'InformationDisclosure2':
+        case 'InformationDisclosure3':
+          return "Lakukan enkripsi data dan pembatasan akses berbasis peran (RBAC).";
+        case 'DenialOfService1':
+        case 'DenialOfService2':
+        case 'DenialOfService3':
+          return "Gunakan firewall dan pembatasan permintaan untuk mencegah serangan DoS.";
+        case 'ElevationOfPrivilege1':
+        case 'ElevationOfPrivilege2':
+        case 'ElevationOfPrivilege3':
+          return "Perkuat kontrol akses dan lakukan validasi otorisasi pengguna.";
+        default:
+          return "Mitigasi tidak ditemukan untuk ancaman ini.";
+      }
+    }
+
+    function getReview(ancaman) {
+      switch (ancaman) {
+        case 'Spoofing1':
+        case 'Spoofing2':
+        case 'Spoofing3':
+          return "Penting untuk meningkatkan kebijakan autentikasi dan memastikan pengguna dilindungi dari pencurian identitas.";
+        case 'Tampering1':
+        case 'Tampering2':
+        case 'Tampering3':
+          return "Audit keamanan rutin dan pemantauan konfigurasi server diperlukan untuk menghindari modifikasi yang tidak sah.";
+        case 'Repudiation1':
+        case 'Repudiation2':
+        case 'Repudiation3':
+          return "Pengguna harus diberi tahu tentang aktivitas yang terjadi untuk mencegah penolakan yang tidak berdasar.";
+        case 'InformationDisclosure1':
+        case 'InformationDisclosure2':
+        case 'InformationDisclosure3':
+          return "Data sensitif harus dienkripsi, dan akses harus dibatasi hanya untuk yang berwenang.";
+        case 'DenialOfService1':
+        case 'DenialOfService2':
+        case 'DenialOfService3':
+          return "Perlunya rencana pemulihan bencana untuk menghadapi serangan DoS yang berpotensi mengganggu layanan.";
+        case 'ElevationOfPrivilege1':
+        case 'ElevationOfPrivilege2':
+        case 'ElevationOfPrivilege3':
+          return "Pemantauan aktif dan penerapan kontrol akses yang ketat sangat dianjurkan.";
+        default:
+          return "Ulasan tidak ditemukan untuk ancaman ini.";
+      }
+    }
+
+    function generateData() {
+      const aset = document.getElementById("aset").value;
+      const ancaman = document.getElementById("ancaman").value;
+      const damage = parseInt(document.getElementById("damage").value);
+      const reproducibility = parseInt(document.getElementById("reproducibility").value);
+      const exploitability = parseInt(document.getElementById("exploitability").value);
+      const affectedUsers = parseInt(document.getElementById("affectedUsers").value);
+      const discoverability = parseInt(document.getElementById("discoverability").value);
+
+      // Hitung DREAD Score
+      const dreadScore = (damage + reproducibility + exploitability + affectedUsers + discoverability);
+
+      const dreadValues = {
+        aset,
+        ancaman,
+        dreadScore,
+        damage,
+        reproducibility,
+        exploitability,
+        affectedUsers,
+        discoverability,
+        mitigasi: getMitigation(ancaman),
+        review: getReview(ancaman) // Ganti ini untuk mendapatkan review yang sesuai
+      };
+
+      localStorage.setItem('dreadValues', JSON.stringify(dreadValues));
+      displayChart();
+      addTableRow(dreadValues);
+    }
+
+    function displayChart() {
+      const data = JSON.parse(localStorage.getItem('dreadValues'));
+
+      const labels = ['Damage', 'Reproducibility', 'Exploitability', 'Affected Users', 'Discoverability'];
+      const values = [data.damage, data.reproducibility, data.exploitability, data.affectedUsers, data.discoverability];
+
+      const ctx = document.getElementById('dreadChart').getContext('2d');
+
+      if (window.dreadChart instanceof Chart) {
+        window.dreadChart.destroy();
+      }
+
+      // Array warna yang berbeda untuk setiap bar
+      const colors = [
+        'rgba(255, 99, 132, 0.2)',  // Red
+        'rgba(54, 162, 235, 0.2)',  // Blue
+        'rgba(255, 206, 86, 0.2)',  // Yellow
+        'rgba(75, 192, 192, 0.2)',  // Green
+        'rgba(153, 102, 255, 0.2)'  // Purple
+      ];
+
+      const borderColors = [
+        'rgba(255, 99, 132, 1)',    // Red
+        'rgba(54, 162, 235, 1)',    // Blue
+        'rgba(255, 206, 86, 1)',    // Yellow
+        'rgba(75, 192, 192, 1)',     // Green
+        'rgba(153, 102, 255, 1)'     // Purple
+      ];
+
+      window.dreadChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: `Aset: ${data.aset} | Ancaman: ${data.ancaman}`,
+            data: values,
+            backgroundColor: colors,
+            borderColor: borderColors,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          },
+          plugins: {
+            legend: { display: true, position: 'top' }
+          }
+        }
+      });
+    }
+
+    function addTableRow(dreadValues) {
+      const tableBody = document.querySelector("#riskTable tbody");
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+    <td>${dreadValues.aset}</td>
+    <td>${dreadValues.ancaman}</td>
+    <td>${dreadValues.dreadScore}</td>
+    <td>${dreadValues.mitigasi}</td>
+    <td>${dreadValues.review}</td>
+  `;
+      tableBody.appendChild(newRow);
+    }
+  </script>
+</body>
+
+</html>
