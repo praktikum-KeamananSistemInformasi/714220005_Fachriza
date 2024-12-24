@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analisis Ancaman</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid container">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-5">
+    <h1 class="text-center mb-4">DREAD Evaluation System</h1>
+
+    <!-- Form Input -->
+    <form id="dreadForm">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="asset" class="form-label">Pilih Aset:</label>
+          <select id="asset" class="form-select">
+            <option value="Server">Server</option>
+            <option value="Database">Database</option>
+            <option value="Data Pengguna">Data Pengguna</option>
+            <option value="API Eksternal">API Eksternal</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label for="threat" class="form-label">Pilih Ancaman:</label>
+          <select id="threat" class="form-select">
+            <!-- Threats will be dynamically populated -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Input Nilai DREAD -->
+      <div class="row mb-3">
+        <div class="col-md-2">
+          <label for="damage" class="form-label">Damage:</label>
+          <select id="damage" class="form-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label for="reproducibility" class="form-label">Reproducibility:</label>
+          <select id="reproducibility" class="form-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label for="exploitability" class="form-label">Exploitability:</label>
+          <select id="exploitability" class="form-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label for="affectedUsers" class="form-label">Affected Users:</label>
+          <select id="affectedUsers" class="form-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label for="discoverability" class="form-label">Discoverability:</label>
+          <select id="discoverability" class="form-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button type="button" id="generate" class="btn btn-primary">Generate</button>
+      </div>
+    </form>
+
+    <!-- Tabel Hasil -->
+    <div class="mt-5">
+      <h2>Hasil Evaluasi</h2>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Aset</th>
+            <th>Kategori STRIDE</th>
+            <th>Ancaman</th>
+            <th>Nilai DREAD</th>
+            <th>Mitigasi Risiko</th>
+            <th>Review</th>
+          </tr>
+        </thead>
+        <tbody id="resultTable">
+          <!-- Hasil akan ditambahkan secara dinamis -->
+        </tbody>
+      </table>
+
+    </div>
+
+    <!-- Grafik -->
+    <div class="mt-5">
+      <h2>Grafik Nilai DREAD</h2>
+      <canvas id="dreadChart" width="400" height="200"></canvas>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="./assets/script/script.js"></script>
+</body>
+
+</html>
