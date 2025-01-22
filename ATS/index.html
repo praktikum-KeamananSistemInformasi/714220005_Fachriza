@@ -53,76 +53,83 @@
         <div class="col-md-2">
           <label for="damage" class="form-label">Damage:</label>
           <select id="damage" class="form-select">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
+            <option value="0">0 (no damage)</option>
+            <option value="1">1 (no damage)</option>
+            <option value="2">2 (no damage)</option>
+            <option value="3">3 (no damage)</option>
+            <option value="4">4 (no damage)</option>
+            <option value="5">5 (information disclosure)</option>
+            <option value="6">6 (information disclosure)</option>
+            <option value="7">7 (information disclosure)</option>
+            <option value="8">8 (non-sensitive data of individuals being compromised)</option>
+            <option value="9">9 (non-sensitive administrative data being compromised)</option>
+            <option value="10">10 (destruction of the system in scope, the data, or loss of system availability)
+            </option>
           </select>
         </div>
         <div class="col-md-2">
           <label for="reproducibility" class="form-label">Reproducibility:</label>
           <select id="reproducibility" class="form-select">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
+            <option value="0">0 (nearly impossible or difficult)</option>
+            <option value="1">1 (nearly impossible or difficult)</option>
+            <option value="2">2 (nearly impossible or difficult)</option>
+            <option value="3">3 (nearly impossible or difficult)</option>
+            <option value="4">4 (nearly impossible or difficult)</option>
+            <option value="5">5 (complex)</option>
+            <option value="6">6 (complex)</option>
+            <option value="7">7 (complex)</option>
+            <option value="8">8 (easy)</option>
+            <option value="9">9 (easy)</option>
+            <option value="10">10 (very easy)</option>
           </select>
         </div>
         <div class="col-md-2">
           <label for="exploitability" class="form-label">Exploitability:</label>
           <select id="exploitability" class="form-select">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
+            <option value="0">0 (requires advanced technical skills)</option>
+            <option value="1">1 (requires advanced technical skills)</option>
+            <option value="2">2 (requires advanced technical skills)</option>
+            <option value="3">3 (requires advanced technical skills)</option>
+            <option value="4">4 (requires advanced technical skills)</option>
+            <option value="5">5 (requires tools that are available)</option>
+            <option value="6">6 (requires tools that are available)</option>
+            <option value="7">7 (requires tools that are available)</option>
+            <option value="8">8 (requires tools that are available)</option>
+            <option value="9">9 (requires application proxies)</option>
+            <option value="10">10 ((only) requires browser)</option>
           </select>
         </div>
         <div class="col-md-2">
           <label for="affectedUsers" class="form-label">Affected Users:</label>
           <select id="affectedUsers" class="form-select">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
+            <option value="0">0 (no users are affected)</option>
+            <option value="1">1 (no users are affected)</option>
+            <option value="2">2 (no users are affected)</option>
+            <option value="3">3 (only individual users are affected)</option>
+            <option value="4">4 (only individual users are affected)</option>
+            <option value="5">5 (only individual users are affected)</option>
+            <option value="6">6 (only individual users are affected)</option>
+            <option value="7">7 (few users are affected)</option>
+            <option value="8">8 (administrative users are affected (these are more important users))</option>
+            <option value="9">9 (administrative users are affected (these are more important users))</option>
+            <option value="10">10 (all users are affected)</option>
           </select>
         </div>
         <div class="col-md-2">
           <label for="discoverability" class="form-label">Discoverability:</label>
           <select id="discoverability" class="form-select">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
+            <option value="0">0 (hard to discover)</option>
+            <option value="1">1 (hard to discover)</option>
+            <option value="2">2 (hard to discover)</option>
+            <option value="3">3 (hard to discover)</option>
+            <option value="4">4 (hard to discover)</option>
+            <option value="5">5 (open requests can discover the threat)</option>
+            <option value="6">6 (open requests can discover the threat)</option>
+            <option value="7">7 (open requests can discover the threat)</option>
+            <option value="8">8 (a threat being publicly known or found)</option>
+            <option value="9">9 (a threat being publicly known or found)</option>
+            <option value="10">10 (the threat is easily discoverable, such as in an easily accessible page or form)
+            </option>
           </select>
         </div>
       </div>
