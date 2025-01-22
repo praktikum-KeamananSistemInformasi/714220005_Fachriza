@@ -1,10 +1,10 @@
 const threats = {
-  "Server": [
+  Server: [
     { value: "Spoofing1", text: "Pencurian identitas pengguna untuk akses ilegal ke sistem" },
     { value: "Spoofing2", text: "Penggunaan kredensial palsu untuk mengakses data sensitif" },
     { value: "Spoofing3", text: "Meniru perangkat atau alamat IP untuk menyamar sebagai pengguna sah" },
   ],
-  "Database": [
+  Database: [
     { value: "Tampering1", text: "Mengubah konfigurasi server secara tidak sah" },
     { value: "Tampering2", text: "Memodifikasi data transaksi di database tanpa izin" },
     { value: "Tampering3", text: "Manipulasi data log untuk menyembunyikan aktivitas ilegal" },
@@ -69,17 +69,17 @@ function getStrideCategory(threatValue) {
 }
 
 // Handle Generate Button
-document.getElementById('generate').addEventListener('click', function () {
-  const asset = document.getElementById('asset').value;
-  const threat = document.getElementById('threat').selectedOptions[0];
+document.getElementById("generate").addEventListener("click", function () {
+  const asset = document.getElementById("asset").value;
+  const threat = document.getElementById("threat").selectedOptions[0];
   const threatValue = threat.value; // Value dari ancaman
   const threatText = threat.text; // Deskripsi ancaman
   const strideCategory = getStrideCategory(threatValue); // Ambil kategori STRIDE
-  const damage = parseInt(document.getElementById('damage').value);
-  const reproducibility = parseInt(document.getElementById('reproducibility').value);
-  const exploitability = parseInt(document.getElementById('exploitability').value);
-  const affectedUsers = parseInt(document.getElementById('affectedUsers').value);
-  const discoverability = parseInt(document.getElementById('discoverability').value);
+  const damage = parseInt(document.getElementById("damage").value);
+  const reproducibility = parseInt(document.getElementById("reproducibility").value);
+  const exploitability = parseInt(document.getElementById("exploitability").value);
+  const affectedUsers = parseInt(document.getElementById("affectedUsers").value);
+  const discoverability = parseInt(document.getElementById("discoverability").value);
 
   // Hitung Skor DREAD
   const dreadScore = damage + reproducibility + exploitability + affectedUsers + discoverability;
@@ -88,9 +88,7 @@ document.getElementById('generate').addEventListener('click', function () {
   const mitigation = getMitigation(threatValue);
 
   // Generate Review Berdasarkan Skor DREAD
-  const review = dreadScore > 25
-    ? "Risiko sangat tinggi! Tindakan segera diperlukan."
-    : "Risiko dapat ditangani.";
+  const review = dreadScore > 25 ? "Risiko sangat tinggi! Tindakan segera diperlukan." : "Risiko dapat ditangani.";
 
   // Tambahkan ke tabel hasil
   const tableRow = `
@@ -103,42 +101,42 @@ document.getElementById('generate').addEventListener('click', function () {
       <td>${review}</td>
     </tr>
   `;
-  document.getElementById('resultTable').innerHTML += tableRow;
+  document.getElementById("resultTable").innerHTML += tableRow;
 
   // Tampilkan grafik
-  const ctx = document.getElementById('dreadChart').getContext('2d');
+  const ctx = document.getElementById("dreadChart").getContext("2d");
   new Chart(ctx, {
-    type: 'bar',
+    type: "bar",
     data: {
-      labels: ['Damage', 'Reproducibility', 'Exploitability', 'Affected Users', 'Discoverability'],
-      datasets: [{
-        label: 'Nilai DREAD',
-        data: [damage, reproducibility, exploitability, affectedUsers, discoverability],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)', // Merah muda
-          'rgba(54, 162, 235, 0.2)', // Biru
-          'rgba(255, 206, 86, 0.2)', // Kuning
-          'rgba(75, 192, 192, 0.2)', // Hijau
-          'rgba(153, 102, 255, 0.2)' // Ungu
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)'
-        ],
-        borderWidth: 1
-      }]
+      labels: ["Damage", "Reproducibility", "Exploitability", "Affected Users", "Discoverability"],
+      datasets: [
+        {
+          label: "Nilai DREAD",
+          data: [damage, reproducibility, exploitability, affectedUsers, discoverability],
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.2)", // Merah muda
+            "rgba(54, 162, 235, 0.2)", // Biru
+            "rgba(255, 206, 86, 0.2)", // Kuning
+            "rgba(75, 192, 192, 0.2)", // Hijau
+            "rgba(153, 102, 255, 0.2)", // Ungu
+          ],
+          borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)", "rgba(75, 192, 192, 1)", "rgba(153, 102, 255, 1)"],
+          borderWidth: 1,
+        },
+      ],
     },
     options: {
       scales: {
         y: {
           beginAtZero: true,
-          max: 10
-        }
-      }
-    }
+          max: 10,
+        },
+      },
+    },
   });
 });
 
+// Handle Clear Button
+document.getElementById("clearTable").addEventListener("click", function () {
+  document.getElementById("resultTable").innerHTML = "";
+});
